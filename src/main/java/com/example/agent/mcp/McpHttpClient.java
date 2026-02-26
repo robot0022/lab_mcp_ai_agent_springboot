@@ -21,6 +21,11 @@ public class McpHttpClient {
         this.path = path;
     }
 
+    protected McpHttpClient() {
+        this.web = null;
+        this.path = null;
+    }
+
     public Mono<Map> callTool(String toolName, Map<String, Object> arguments) {
         Map<String, Object> payload = Map.of(
                 "jsonrpc", "2.0",
