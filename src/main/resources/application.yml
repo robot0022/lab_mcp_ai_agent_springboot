@@ -1,0 +1,12 @@
+github:
+  owner: ${GITHUB_OWNER}
+  repo: ${GITHUB_REPO}
+
+anthropic:
+  api-key: ${GOOGLE_API_KEY}
+  model: gemini-1.5-pro
+  timeout-seconds: 60
+
+mcp:
+  base-url: http://localhost:3333
+  path: /mcp
