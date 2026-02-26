@@ -2,7 +2,7 @@ package com.example.agent.config;
 
 import com.example.agent.agent.BacklogAgent;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.google.GoogleAiGeminiChatModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.service.AiServices;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
