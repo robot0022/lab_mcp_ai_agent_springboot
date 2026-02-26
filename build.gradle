@@ -21,10 +21,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework:spring-webflux'
 
-	// LangChain4j (downgraded to stable 0.35.0 to resolve CI issues)
+	// LangChain4j
 	implementation "dev.langchain4j:langchain4j:0.35.0"
 	implementation "dev.langchain4j:langchain4j-google-ai-gemini:0.35.0"
-	implementation "dev.langchain4j:langchain4j-http-client-jdk:0.35.0"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.mockito:mockito-core:5.12.0"
