@@ -1,0 +1,11 @@
+github:
+  owner: dummy-owner
+  repo: dummy-repo
+
+anthropic:
+  api-key: dummy-api-key
+  model: gemini-1.5-pro
+
+mcp:
+  base-url: http://localhost:3333
+  path: /mcp
