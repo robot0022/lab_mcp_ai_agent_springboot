@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # These must be provided in a .env file or passed through your environment
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_REPO=${GITHUB_REPO}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Tell the agent to target the MCP wrapper container
+      - MCP_BASE_URL=http://mcp-server:3333
+    depends_on:
+      - mcp-server
+
+  mcp-server:
+    build:
+      context: mcp-github-http-wrapper
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
