@@ -17,27 +17,34 @@ class GitHubMcpToolsTest {
     @SuppressWarnings("unchecked")
     void testCreateIssueDelegatesToMcpClient() {
         // Arrange
-        McpHttpClient mcpClientMock = mock(McpHttpClient.class);
-        GitHubMcpTools tools = new GitHubMcpTools(mcpClientMock, "test-owner", "test-repo");
+        Map<String, Object> mockResponse = Map.of("content", "Issue #42 created");
 
-        Map<String, Object> mockResponse = Map.of(
-                "content", "Issue #42 created");
-        when(mcpClientMock.callTool(eq("create_issue"), any(Map.class)))
-                .thenReturn(Mono.just(mockResponse));
+        final java.util.List<Map<String, Object>> capturedArgs = new java.util.ArrayList<>();
+
+        McpHttpClient fakeClient = new McpHttpClient() {
+            @Override
+            public Mono<Map> callTool(String toolName, Map<String, Object> arguments) {
+                if ("create_issue".equals(toolName)) {
+                    capturedArgs.add(arguments);
+                    return Mono.just(mockResponse);
+                }
+                return Mono.error(new RuntimeException("Unexpected tool call"));
+            }
+        };
+
+        GitHubMcpTools tools = new GitHubMcpTools(fakeClient, "test-owner", "test-repo");
 
         // Act
         String result = tools.createIssue("Fix Login", "Login is broken on Chrome");
 
         // Assert
         assertThat(result).contains("Issue #42 created");
+        assertThat(capturedArgs).hasSize(1);
 
-        ArgumentCaptor<Map<String, Object>> argsCaptor = ArgumentCaptor.forClass(Map.class);
-        verify(mcpClientMock, times(1)).callTool(eq("create_issue"), argsCaptor.capture());
-
-        Map<String, Object> capturedArgs = argsCaptor.getValue();
-        assertThat(capturedArgs).containsEntry("owner", "test-owner");
-        assertThat(capturedArgs).containsEntry("repo", "test-repo");
-        assertThat(capturedArgs).containsEntry("title", "Fix Login");
-        assertThat(capturedArgs).containsEntry("body", "Login is broken on Chrome");
+        Map<String, Object> args = capturedArgs.get(0);
+        assertThat(args).containsEntry("owner", "test-owner");
+        assertThat(args).containsEntry("repo", "test-repo");
+        assertThat(args).containsEntry("title", "Fix Login");
+        assertThat(args).containsEntry("body", "Login is broken on Chrome");
     }
 }
