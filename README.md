@@ -1508,7 +1508,8 @@ This step deploys:
 Start Minikube:
 
 ```bash
-minikube start --cpus=4 --memory=8192
+minikube start --driver=docker
+--minikube start --cpus=4 --memory=8192
 ```
 
 Create a namespace:
@@ -1924,7 +1925,10 @@ kubernetes:
         kubectl wait --for=condition=Ready pod -l app=ai-agent --timeout=180s
         kubectl get pods
         minikube service list
-
+        SERVICE_URL=$(minikube service ai-agent --url)
+        echo "${SERVICE_URL}/samples/test"
+        echo "------------------opening the service------------------"
+        sleep 40
     - name: Test service health endpoint
       uses: nick-fields/retry@v3
       with:
@@ -1932,7 +1936,9 @@ kubernetes:
         max_attempts: 6
         command: |
           curl -fsS "$(minikube service ai-agent --url)/actuator/health"
-
+    - name: Log Kubernetes pods
+      run: |
+        kubectl logs $(kubectl get pods -l app=ai-agent -o name)
     - name: Log pods on failure
       if: failure()
       run: |
